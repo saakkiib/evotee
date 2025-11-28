@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ই-ভোটিং — Candidate Workflow (Bangladesh Theme)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bangla:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --flag-green:#006a4e;
+      --flag-green-2:#0b8a64;
+      --flag-red:#da291c;
+      --bg:#fbfdfc;
+      --card:#ffffff;
+      --muted:#547268;
+      --radius:16px;
+      --shadow:0 18px 50px rgba(6,60,30,0.09);
+      font-family:"Noto Sans Bangla","Noto Sans",Arial,sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#ffffff,#fbfdfc);color:#042c25;-webkit-font-smoothing:antialiased}
+    a{color:var(--flag-green)}
+
+    /* top */
+    header.topbar{
+      max-width:980px;
+      margin:20px auto 10px;
+      padding:12px 18px;
+      border-radius:14px;
+      background:linear-gradient(90deg,#ffffff, #f4fbf7);
+      box-shadow:0 10px 30px rgba(6,60,30,0.06);
+      border:1px solid rgba(6,60,30,0.04);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand img{width:52px;height:52px;border-radius:10px;object-fit:cover}
+    .brand h1{margin:0;font-size:18px;font-weight:800;color:var(--flag-green)}
+    .brand p{margin:0;font-size:13px;color:var(--muted)}
+    .top-right{font-size:13px;color:var(--muted);text-align:right}
+
+    /* container */
+    .shell{
+      max-width:980px;
+      margin:0 auto 30px;
+      padding:0 16px 24px;
+    }
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px;
+      border:1px solid rgba(6,60,30,0.04);
+    }
+
+    /* progress bar */
+    .steps{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:18px;
+      gap:8px;
+    }
+    .step-chip{
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(6,60,30,0.08);
+      background:#f4faf6;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .step-num{
+      width:22px;height:22px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      background:#e0f4eb;color:var(--flag-green);font-weight:700;
+    }
+    .step-chip.current{
+      background:linear-gradient(90deg,var(--flag-green-2),var(--flag-green));
+      color:#fff;
+      border-color:transparent;
+    }
+    .step-chip.current .step-num{
+      background:#fff;color:var(--flag-green);
+    }
+    .step-chip.done{
+      background:#e5f6ed;
+      border-color:rgba(6,60,30,0.18);
+      color:#145c3f;
+    }
+
+    /* layout inside page */
+    .page-title{margin:0 0 4px;font-size:20px;color:var(--flag-green)}
+    .page-sub{margin:0 0 16px;font-size:13px;color:var(--muted)}
+
+    .avatar{
+      width:72px;height:72px;border-radius:14px;
+      background:linear-gradient(180deg,var(--flag-green-2),var(--flag-green));
+      color:#fff;font-weight:800;font-size:24px;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 10px 30px rgba(6,60,30,0.16);
+    }
+
+    .layout-row{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+    }
+    .mini-card{
+      flex:1 1 220px;
+      padding:12px;
+      border-radius:12px;
+      background:linear-gradient(180deg,#ffffff,#f8fdf9);
+      border:1px solid rgba(6,60,30,0.04);
+      font-size:13px;
+    }
+    .mini-card strong{display:block;margin-bottom:4px}
+
+    label{display:block;margin-top:10px;margin-bottom:6px;font-size:13px;font-weight:700;color:var(--flag-green)}
+    input[type="text"],textarea,select{
+      width:100%;padding:11px 12px;border-radius:10px;
+      border:1px solid #dde9e1;background:#ffffff;font-size:14px;
+      outline:none;
+    }
+    textarea{min-height:110px;resize:vertical}
+    input:focus,textarea:focus,select:focus{
+      border-color:var(--flag-green);box-shadow:0 10px 30px rgba(6,60,30,0.08);
+    }
+
+    .btn-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      border:none;
+      border-radius:12px;
+      padding:11px 18px;
+      font-weight:800;
+      cursor:pointer;
+      font-size:14px;
+    }
+    .btn.green{
+      background:linear-gradient(180deg,var(--flag-green-2),var(--flag-green));
+      color:#fff;
+      box-shadow:0 12px 30px rgba(6,60,30,0.18);
+    }
+    .btn.red{
+      background:linear-gradient(180deg,#ff8178,var(--flag-red));
+      color:#fff;
+      box-shadow:0 12px 30px rgba(218,41,28,0.18);
+    }
+    .btn.ghost{
+      background:transparent;
+      border:1px solid rgba(6,60,30,0.14);
+      color:var(--flag-green);
+    }
+
+    /* only one page visible */
+    .step-page{display:none}
+    .step-page.active{display:block}
+
+    /* result */
+    .centered{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;margin-top:10px}
+    .circle-ok,.circle-no{
+      width:130px;height:130px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:60px;
+    }
+    .circle-ok{
+      background:radial-gradient(circle at 30% 30%,#ffffff,#c9efd3);
+      color:var(--flag-green);
+    }
+    .circle-no{
+      background:radial-gradient(circle at 30% 30%,#ffffff,#ffcaca);
+      color:var(--flag-red);
+    }
+
+    footer{text-align:center;font-size:12px;color:var(--muted);margin-top:14px}
+    @media(max-width:600px){
+      .steps{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="topbar">
+    <div class="brand">
+      <img src="images/1123.jpg" alt="logo" onerror="this.style.display='none'">
+      <div>
+        <h1>বাংলাদেশ নির্বাচন কমিশন</h1>
+        <p>Candidate E-Voting Workflow (Demo)</p>
+      </div>
+    </div>
+    <div class="top-right">
+      <div>Prototype UI · Single Page</div>
+      <div>Step-by-step flow</div>
+    </div>
+  </header>
+
+  <div class="shell">
+    <!-- Progress -->
+    <div class="steps" id="stepChips">
+      <div class="step-chip" data-step="dashboard">
+        <div class="step-num">1</div><span>Dashboard</span>
+      </div>
+      <div class="step-chip" data-step="create">
+        <div class="step-num">2</div><span>Create Profile</span>
+      </div>
+      <div class="step-chip" data-step="submit">
+        <div class="step-num">3</div><span>Submit</span>
+      </div>
+      <div class="step-chip" data-step="admin">
+        <div class="step-num">4</div><span>Admin Review</span>
+      </div>
+      <div class="step-chip" data-step="result">
+        <div class="step-num">5</div><span>Result</span>
+      </div>
+    </div>
+
+    <!-- CONTENT CARD -->
+    <div class="card">
+
+      <!-- Step 1: Dashboard -->
+      <section id="page-dashboard" class="step-page active">
+        <div class="layout-row">
+          <div style="display:flex;gap:12px;align-items:center;flex:2">
+            <div class="avatar" id="avatar">AM</div>
+            <div>
+              <h2 class="page-title" id="nameTitle">Alex Mahmud</h2>
+              <p class="page-sub" id="roleTitle">Independent · Zone 5</p>
+            </div>
+          </div>
+          <div class="mini-card" style="flex:1">
+            <strong>Upcoming Election</strong>
+            <span>City Council — Zone 5</span><br>
+            <span class="muted">Nomination close: ৩০ আগস্ট ২০২৫</span>
+          </div>
+        </div>
+
+        <div class="layout-row" style="margin-top:16px">
+          <div class="mini-card">
+            <strong>Profile Completion</strong>
+            <span class="muted">80% — ছবি ও ম্যানিফেস্টো যোগ করুন</span>
+          </div>
+          <div class="mini-card">
+            <strong>Submission</strong>
+            <span id="statusText" class="muted">Not submitted</span>
+          </div>
+          <div class="mini-card">
+            <strong>Verification</strong>
+            <span class="muted">2 items pending</span>
+          </div>
+        </div>
+
+        <div style="margin-top:18px">
+          <strong>সংক্ষিপ্ত জীবনী</strong>
+          <p id="bioPreview" class="muted" style="margin-top:6px">
+            কমিউনিটি সেবায় বিশ্বাসী — টেকসই পরিবহন, যুবসম্ভব কর্মসংস্থান ও স্থানীয় স্বাস্থ্যসেবা উন্নয়ন।
+          </p>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn green" onclick="goStep('create')">Next: Create Profile →</button>
+        </div>
+      </section>
+
+      <!-- Step 2: Create Profile -->
+      <section id="page-create" class="step-page">
+        <h2 class="page-title">Create Profile &amp; Agenda</h2>
+        <p class="page-sub">প্রোফাইল তথ্য, পার্টি ও ম্যানিফেস্টো আপডেট করুন</p>
+
+        <form id="profileForm" onsubmit="saveProfile(event)">
+          <label>Full Name</label>
+          <input id="fullName" type="text" placeholder="আপনার নাম">
+
+          <label>Party / Affiliation</label>
+          <input id="party" type="text" placeholder="Independent বা Party নাম">
+
+          <label>Short Bio</label>
+          <textarea id="bio" placeholder="সংক্ষিপ্ত বিবরণ লিখুন..."></textarea>
+
+          <label>Agenda (PDF filename)</label>
+          <input id="agendaFile" type="text" placeholder="manifesto.pdf">
+
+          <div class="btn-row">
+            <button type="button" class="btn ghost" onclick="goStep('dashboard')">← Back: Dashboard</button>
+            <button type="submit" class="btn green">Save &amp; Next: Submit →</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Step 3: Submit -->
+      <section id="page-submit" class="step-page">
+        <h2 class="page-title">Submit Candidacy</h2>
+        <p class="page-sub">সব তথ্য যাচাই করে ক্যান্ডিডেসি সাবমিট করুন</p>
+
+        <div class="layout-row">
+          <div class="mini-card" style="flex:1">
+            <strong>Summary</strong>
+            <ul style="padding-left:18px;margin:6px 0" class="muted">
+              <li id="sumName">Name: —</li>
+              <li id="sumParty">Party: —</li>
+              <li id="sumBio">Bio: —</li>
+              <li id="sumAgenda">Agenda: —</li>
+            </ul>
+          </div>
+          <div class="mini-card" style="flex:1">
+            <strong>Checklist</strong>
+            <ul style="padding-left:18px;margin:6px 0" class="muted">
+              <li>Photo uploaded</li>
+              <li>National ID verified</li>
+              <li>Agenda PDF attached</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn ghost" type="button" onclick="goStep('create')">← Back: Edit Profile</button>
+          <button class="btn green" type="button" onclick="doSubmit()">Submit for Review →</button>
+        </div>
+      </section>
+
+      <!-- Step 4: Admin Review -->
+      <section id="page-admin" class="step-page">
+        <h2 class="page-title">Admin Reviews Application</h2>
+        <p class="page-sub">অ্যাডমিন ডেমো — এখানে থেকে Approve / Reject নির্বাচন করা যাবে</p>
+
+        <div class="mini-card">
+          <strong>Candidate</strong>
+          <div id="admName">—</div>
+          <div class="muted" id="admInfo">—</div>
+          <div class="muted" id="admAgenda" style="margin-top:6px">Agenda: —</div>
+        </div>
+
+        <label style="margin-top:16px">Admin Notes (optional)</label>
+        <textarea id="adminNotes" placeholder="কারণ বা নোট লিখুন..."></textarea>
+
+        <div class="btn-row">
+          <button class="btn ghost" type="button" onclick="goStep('submit')">← Back: Submit</button>
+          <span style="flex:1"></span>
+          <button class="btn red" type="button" onclick="adminDecision('reject')">Reject</button>
+          <button class="btn green" type="button" onclick="adminDecision('approve')">Approve →</button>
+        </div>
+      </section>
+
+      <!-- Step 5: Result -->
+      <section id="page-result" class="step-page">
+        <div id="approvedView" class="centered" style="display:none">
+          <div class="circle-ok">✓</div>
+          <h2 class="page-title" style="text-align:center">আপনার ক্যান্ডিডেসি অনুমোদিত</h2>
+          <p class="page-sub" style="text-align:center">
+            আপনি নির্বাচন অংশগ্রহণের জন্য যোগ্য। পরবর্তী নির্দেশাবলী মেইলে পাঠানো হবে।
+          </p>
+        </div>
+
+        <div id="rejectedView" class="centered" style="display:none">
+          <div class="circle-no">✕</div>
+          <h2 class="page-title" style="text-align:center;color:var(--flag-red)">আপনার আবেদন প্রত্যাখ্যাত</h2>
+          <p id="rejReason" class="page-sub" style="text-align:center">কারণ: —</p>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn ghost" type="button" onclick="goStep('dashboard')">← Back to Dashboard</button>
+          <button class="btn green" type="button" onclick="goStep('create')">Edit &amp; Re-Submit</button>
+        </div>
+      </section>
+
+    </div>
+
+    <footer>©️ <span id="yr"></span> Bangladesh Election Commission — Prototype</footer>
+  </div>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // Step order
+    const steps = ['dashboard','create','submit','admin','result'];
+    let currentStep = 'dashboard';
+
+    const state = {
+      name:'Alex Mahmud',
+      party:'Independent',
+      bio:'কমিউনিটি সেবায় বিশ্বাসী — টেকসই পরিবহন, যুবসম্ভব কর্মসংস্থান ও স্থানীয় স্বাস্থ্যসেবা উন্নয়ন।',
+      agenda:'manifesto.pdf',
+      submitted:false,
+      decision:null
+    };
+
+    function refreshUI(){
+      // header + avatar
+      document.getElementById('nameTitle').textContent = state.name;
+      document.getElementById('roleTitle').textContent = state.party + ' · Zone 5';
+      document.getElementById('avatar').textContent = (state.name.split(' ')[0] || 'A').slice(0,2).toUpperCase();
+      // dashboard
+      document.getElementById('bioPreview').textContent = state.bio;
+      document.getElementById('statusText').textContent = state.submitted ? 'Submitted for review' : 'Not submitted';
+      // submit summary
+      document.getElementById('sumName').textContent = 'Name: ' + state.name;
+      document.getElementById('sumParty').textContent = 'Party: ' + state.party;
+      document.getElementById('sumBio').textContent  = 'Bio: ' + (state.bio.length>80 ? state.bio.slice(0,80)+'…' : state.bio);
+      document.getElementById('sumAgenda').textContent = 'Agenda: ' + state.agenda;
+      // admin block
+      document.getElementById('admName').textContent = state.name;
+      document.getElementById('admInfo').textContent = state.party + ' · Zone 5';
+      document.getElementById('admAgenda').textContent = 'Agenda: ' + state.agenda;
+    }
+    refreshUI();
+
+    function goStep(step){
+      currentStep = step;
+      // toggle page
+      steps.forEach(s=>{
+        const page = document.getElementById('page-'+s);
+        if(page){
+          page.classList.toggle('active', s===step);
+        }
+      });
+      // update progress chips
+      const idx = steps.indexOf(step);
+      document.querySelectorAll('#stepChips .step-chip').forEach((chip,i)=>{
+        chip.classList.remove('current','done');
+        if(i < idx){ chip.classList.add('done'); }
+        else if(i === idx){ chip.classList.add('current'); }
+      });
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function saveProfile(e){
+      e.preventDefault();
+      const name = document.getElementById('fullName').value.trim();
+      const party = document.getElementById('party').value.trim();
+      const bio   = document.getElementById('bio').value.trim();
+      const agenda= document.getElementById('agendaFile').value.trim();
+      if(name) state.name = name;
+      if(party) state.party = party;
+      if(bio)   state.bio   = bio;
+      if(agenda)state.agenda= agenda;
+      refreshUI();
+      alert('Profile saved (demo).');
+      goStep('submit');
+    }
+
+    function doSubmit(){
+      if(!state.agenda){
+        alert('দয়া করে প্রথমে এজেন্ডা/ম্যানিফেস্টো ফাইল যোগ করুন।');
+        return;
+      }
+      state.submitted = true;
+      refreshUI();
+      alert('সাবমিশন সফল — এখন Admin Review স্টেপে যাবেন।');
+      goStep('admin');
+    }
+
+    function adminDecision(dec){
+      state.decision = dec;
+      const notes = document.getElementById('adminNotes').value.trim();
+      if(dec === 'approve'){
+        document.getElementById('approvedView').style.display = 'flex';
+        document.getElementById('rejectedView').style.display = 'none';
+      } else {
+        document.getElementById('approvedView').style.display = 'none';
+        document.getElementById('rejectedView').style.display = 'flex';
+        document.getElementById('rejReason').textContent = 'কারণ: ' + (notes || 'নির্দিষ্ট কারণ প্রদান করা হয়নি।');
+      }
+      goStep('result');
+    }
+  </script>
+</body>
+</html>

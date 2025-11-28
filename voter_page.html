@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Voter Dashboard — Bangladesh Election Commission</title>
+
+  <style>
+    body{
+      margin:0;
+      font-family:"Noto Sans Bengali","Noto Sans",sans-serif;
+      background:#f6faf8;
+      color:#0b3a2e;
+    }
+
+    .topbar{
+      background:#fff;
+      padding:14px 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid #e3eee7;
+    }
+    .brand{font-weight:800;color:#0b6a33;font-size:20px}
+
+    .wrap{
+      max-width:1100px;
+      margin:24px auto;
+      padding:20px;
+    }
+
+    .welcome{
+      font-size:24px;
+      font-weight:800;
+      color:#0b6a33;
+      margin-bottom:14px;
+    }
+
+    /* Profile Card */
+    .profile-card{
+      background:#fff;
+      border-radius:16px;
+      padding:28px;
+      box-shadow:0 20px 50px rgba(6,60,30,0.10);
+      display:flex;
+      gap:26px;
+      align-items:flex-start;
+    }
+    .photo{
+      width:160px;
+      height:200px;
+      border-radius:12px;
+      object-fit:cover;
+      border:2px solid #cfe8d6;
+    }
+    .info{flex:1}
+    .info h2{
+      margin:0;
+      font-size:22px;
+      font-weight:800;
+      color:#0b6a33;
+    }
+    .info table{
+      margin-top:12px;
+      width:100%;
+      border-collapse:collapse;
+    }
+    .info td{
+      padding:8px 4px;
+      font-size:16px;
+      color:#345243;
+    }
+    .label{
+      font-weight:700;
+      width:200px;
+      color:#0b4f33;
+    }
+
+    /* Election Selection Box */
+    .election-box{
+      background:#fff;
+      padding:22px;
+      margin-top:26px;
+      border-radius:16px;
+      box-shadow:0 18px 40px rgba(6,60,30,0.08);
+    }
+    .election-title{
+      color:#0b6a33;
+      font-size:20px;
+      font-weight:800;
+      margin-top:0;
+      margin-bottom:12px;
+    }
+    .election-dropdown{
+      width:100%;
+      padding:14px;
+      font-size:16px;
+      border-radius:10px;
+      border:1px solid #cfe8d6;
+      outline:none;
+    }
+    .election-dropdown:focus{
+      border-color:#0b6a33;
+      box-shadow:0 10px 25px rgba(11,79,49,0.12);
+    }
+
+    .footer{
+      text-align:center;
+      padding:18px;
+      color:#4b6758;
+      margin-top:30px;
+      font-size:14px;
+    }
+
+    @media(max-width:700px){
+      .profile-card{flex-direction:column;align-items:center;text-align:center}
+      .label{width:140px}
+    }
+
+    /* ========== Donate modal styles (kept in head) ========== */
+    :root{--green-600:#0b6a33; --green-400:#2fa14f;}
+    .donate-wrap{display:flex;justify-content:center;margin:18px 0 6px;z-index:5}
+    .donate-card{background:linear-gradient(180deg,#fff,#f7fffb);border:1px solid rgba(11,79,49,0.06);box-shadow:0 14px 40px rgba(6,60,30,0.06);padding:12px 18px;border-radius:12px;display:flex;gap:12px;align-items:center;max-width:760px;width:92%}
+    .donate-card .left{font-weight:800;color:var(--green-600);font-size:15px}
+    .donate-card .right{margin-left:auto;display:flex;gap:10px;align-items:center}
+    .btn-donate{background:linear-gradient(180deg,var(--green-400),var(--green-600));color:#fff;padding:10px 14px;border-radius:10px;border:none;font-weight:800;cursor:pointer}
+    .btn-ghost-small{background:transparent;border:1px solid rgba(11,79,49,0.08);padding:8px 10px;border-radius:10px;color:var(--green-600);cursor:pointer;font-weight:700;font-size:13px}
+    .dmodal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.36);display:none;align-items:center;justify-content:center;z-index:9999}
+    .dmodal{width:920px;max-width:96%;background:#fff;border-radius:12px;padding:18px;box-shadow:0 30px 80px rgba(6,60,30,0.18);display:flex;gap:16px}
+    .dmodal .left-col{flex:1;min-width:260px;border-right:1px solid rgba(6,60,30,0.04);padding-right:12px}
+    .dmodal .right-col{flex:1;min-width:300px;padding-left:12px}
+    .dmodal h3{margin:0 0 8px;color:var(--green-600)}
+    .select, input[type="number"]{width:100%;padding:10px;border-radius:8px;border:1px solid #e6efe8;font-size:15px}
+    .candidate-item{display:flex;gap:10px;align-items:center;padding:10px;border-radius:10px;border:1px solid transparent;cursor:pointer}
+    .candidate-item img{width:56px;height:56px;border-radius:8px;object-fit:cover;border:1px solid #e9f3ee}
+    .candidate-item.selected{background:linear-gradient(180deg,#f2fff6,#ffffff);border-color:rgba(11,79,49,0.08);box-shadow:0 8px 28px rgba(11,79,49,0.06)}
+    .donate-meta{font-size:14px;color:#345243;margin-bottom:8px}
+    .donate-actions{display:flex;gap:10px;align-items:center;margin-top:12px}
+    .don-hist{max-height:220px;overflow:auto;border-top:1px dashed #e6efe8;padding-top:10px;margin-top:10px}
+    .small-muted{font-size:13px;color:#5a6f62}
+    @media(max-width:880px){ .dmodal{flex-direction:column} .dmodal .left-col{border-right:none;padding-right:0} .dmodal .right-col{padding-left:0} }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="topbar">
+    <div class="brand">বাংলাদেশ নির্বাচন কমিশন</div>
+    <div><a href="index.html" style="color:#0b6a33;font-weight:700;text-decoration:none">Logout</a></div>
+  </header>
+
+  <div class="wrap">
+
+    <!-- Welcome -->
+    <div class="welcome">স্বাগতম, <span style="color:#2fa14f">Sadman Sakib</span>!</div>
+
+    <!-- Profile Card -->
+    <section class="profile-card">
+      <img src="images/123.jpg" alt="Profile Photo" class="photo" />
+
+      <div class="info">
+        <h2>Voter Profile</h2>
+        <table>
+          <tr><td class="label">নাম</td><td>Sadman Sakib</td></tr>
+          <tr><td class="label">Voter ID</td><td>0112330403</td></tr>
+          <tr><td class="label">মোবাইল নম্বর</td><td>01316448433</td></tr>
+          <tr><td class="label">ঠিকানা / এলাকা</td><td>Gazipur, Bangladesh</td></tr>
+          <tr><td class="label">জন্মতারিখ</td><td>20-10-2003</td></tr>
+          <tr><td class="label">লিঙ্গ</td><td>Male</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========== DONATE CARD + MODAL (ADD BEFORE footer) ========== -->
+
+<div class="donate-wrap" aria-hidden="false">
+  <div class="donate-card" role="region" aria-label="Donate for campaign">
+    <div class="left">
+      Donate for Election Campaign — Candidate Support (BDT)
+      <div class="small-muted" style="font-weight:600;font-size:13px">আপনি পছন্দমত ক্যান্ডিডেটকে অনুদান দিতে পারবেন।</div>
+    </div>
+
+    <div class="right">
+      <button class="btn-ghost-small" id="viewCandidatesBtn">View Candidates</button>
+      <button class="btn-donate" id="openDonateModal">Donate</button>
+    </div>
+  </div>
+</div>
+
+<div id="dmodalOverlay" class="dmodal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="dmodal" role="document" aria-label="Donate modal">
+    <div class="left-col">
+      <h3>Choose Election &amp; Candidate</h3>
+      <label class="small-muted">Select Election</label>
+      <select id="donationElection" class="select" aria-label="Select election">
+        <option value="national">National Parliament Election</option>
+        <option value="city">City Corporation Election</option>
+        <option value="paurashava">Paurashava Election</option>
+        <option value="upazila">Upazila Election</option>
+        <option value="zila">Zila Parishad Election</option>
+        <option value="union">Union Parishad Election</option>
+      </select>
+
+      <div style="margin-top:12px">
+        <label class="small-muted">Candidates</label>
+        <div id="candidatesList" style="display:flex;flex-direction:column;gap:8px;margin-top:8px" aria-live="polite">
+          <!-- candidate items injected by JS -->
+        </div>
+      </div>
+
+      <div class="don-hist" id="donationHistory">
+        <strong>Donation History</strong>
+        <div id="donHistList" style="margin-top:8px;font-size:14px;color:#3b5d49">
+          <!-- history injected -->
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <h3>Donate</h3>
+      <div class="donate-meta">Selected: <span id="selCandidate">—</span></div>
+
+      <label class="small-muted">Amount (BDT)</label>
+      <input id="donAmount" type="number" min="50" placeholder="Enter amount in BDT" />
+
+      <label style="margin-top:8px" class="small-muted">Donor Name (optional)</label>
+      <input id="donorName" type="text" placeholder="Your name (প্রয়োজনে)" />
+
+      <div class="donate-actions">
+        <button class="btn-donate" id="sendDonateBtn">Send Donation</button>
+        <button class="btn-ghost-small" id="closeDonate">Close</button>
+      </div>
+
+      <div id="donStatus" style="margin-top:12px;font-weight:700;color:#1f7b45"></div>
+
+      <div style="margin-top:18px;color:#50645a;font-size:13px">
+        Note: This is a demo donation UI — payment is simulated. For real payments integrate a gateway (bkash, nagad, card).
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* === UPDATED CANDIDATES LIST (names + photos per your requests) === */
+const CANDIDATES = {
+  national: [
+    { id:'nat-1', name:'Md Nehal', party:'Independent', photo:'images/c1.jpg' },
+    { id:'nat-2', name:'Md Reaz', party:'Party X', photo:'images/c2.jpg' }
+  ],
+  city: [
+    { id:'city-1', name:'Mr. M Hasan', party:'Party Y', photo:'images/c3.jpg' },
+    { id:'city-2', name:'Ms. R Akter', party:'Party Z', photo:'images/c4.jpg' }
+  ],
+  paurashava: [
+    { id:'p-1', name:'Taufiq Mahmud', party:'Independent', photo:'images/c5.jpg' },
+    { id:'p-2', name:'Sadman Jahin', party:'Progressive Party', photo:'images/c6.jpg' }
+  ],
+  upazila:[
+    { id:'u-1', name:'Mr. N Uddin', party:'Party B', photo:'images/c7.jpg' },
+    { id:'u-2', name:'Ms. L Khan', party:'Party C', photo:'images/c8.jpg' }
+  ],
+  zila:[
+    { id:'z-1', name:'Mr. D Chowdhury', party:'Party D', photo:'images/c9.jpg' },
+    { id:'z-2', name:'Ms. P Sultana', party:'Party E', photo:'images/c10.jpg' }
+  ],
+  union:[
+    { id:'un-1', name:'Mr. S Molla', party:'Independent', photo:'images/c11.jpg' },
+    { id:'un-2', name:'Ms. H Jahan', party:'Party F', photo:'images/c12.jpg' }
+  ]
+};
+
+/* small helper: render candidates for selected election */
+function renderCandidates(election){
+  const wrap = document.getElementById('candidatesList');
+  wrap.innerHTML = '';
+  const list = CANDIDATES[election] || [];
+  list.forEach(c=>{
+    const node = document.createElement('div');
+    node.className = 'candidate-item';
+    node.tabIndex = 0;
+    node.dataset.cid = c.id;
+    node.innerHTML = `<img src="${c.photo}" alt="${c.name}"><div style="flex:1"><strong style="display:block">${c.name}</strong><div class="small-muted">${c.party}</div></div>`;
+    node.addEventListener('click', ()=> selectCandidate(node, c));
+    node.addEventListener('keydown', (ev)=> { if(ev.key==='Enter') selectCandidate(node,c); });
+    wrap.appendChild(node);
+  });
+  // auto-select first
+  if(list.length) {
+    setTimeout(()=> {
+      const first = wrap.querySelector('.candidate-item');
+      if(first) first.click();
+    }, 50);
+  } else {
+    document.getElementById('selCandidate').textContent = '—';
+  }
+}
+
+/* select candidate */
+let currentSelected = null;
+function selectCandidate(node, candidate){
+  // clear prev
+  document.querySelectorAll('.candidate-item').forEach(n=>n.classList.remove('selected'));
+  node.classList.add('selected');
+  currentSelected = candidate;
+  document.getElementById('selCandidate').textContent = candidate.name + ' · ' + candidate.party;
+}
+
+/* open/close modal */
+const overlay = document.getElementById('dmodalOverlay');
+document.getElementById('openDonateModal').addEventListener('click', ()=> {
+  overlay.style.display = 'flex';
+  overlay.setAttribute('aria-hidden','false');
+  // render default election
+  const el = document.getElementById('donationElection').value;
+  renderCandidates(el);
+  loadDonationHistory();
+});
+document.getElementById('closeDonate').addEventListener('click', closeDonate);
+document.getElementById('viewCandidatesBtn').addEventListener('click', ()=> {
+  // open modal focused on candidates
+  document.getElementById('openDonateModal').click();
+});
+
+/* change election */
+document.getElementById('donationElection').addEventListener('change', (e)=>{
+  renderCandidates(e.target.value);
+});
+
+/* close helper */
+function closeDonate(){
+  overlay.style.display = 'none';
+  overlay.setAttribute('aria-hidden','true');
+  currentSelected = null;
+  document.getElementById('donAmount').value = '';
+  document.getElementById('donorName').value = '';
+  document.getElementById('donStatus').textContent = '';
+}
+
+/* send donation (simulated) */
+document.getElementById('sendDonateBtn').addEventListener('click', ()=> {
+  const amountEl = document.getElementById('donAmount');
+  const amt = parseFloat(amountEl.value);
+  const donor = document.getElementById('donorName').value.trim() || 'Anonymous';
+  const statusEl = document.getElementById('donStatus');
+
+  if(!currentSelected){
+    statusEl.style.color = '#b12727'; statusEl.textContent = 'প্রথমে একটি ক্যান্ডিডেট সিলেক্ট করুন।'; return;
+  }
+  if(!amt || amt < 50){ statusEl.style.color = '#b12727'; statusEl.textContent = 'ন্যূনতম ৫০ BDT পাঠাতে হবে।'; return; }
+
+  // save donation to localStorage (simple ledger)
+  const key = 'evotee_donations';
+  let ledger = JSON.parse(localStorage.getItem(key) || '[]');
+  const entry = {
+    id: 'don-'+Date.now(),
+    candidate_id: currentSelected.id,
+    candidate_name: currentSelected.name,
+    election: document.getElementById('donationElection').value,
+    amount: amt,
+    donor: donor,
+    ts: new Date().toISOString()
+  };
+  ledger.unshift(entry);
+  localStorage.setItem(key, JSON.stringify(ledger));
+
+  statusEl.style.color = '#0b6a33';
+  statusEl.textContent = 'Donation sent (simulated). ধন্যবাদ!';
+
+  // update history
+  loadDonationHistory();
+
+  // clear amount
+  amountEl.value = '';
+});
+
+/* load donation history */
+function loadDonationHistory(){
+  const key = 'evotee_donations';
+  const hist = JSON.parse(localStorage.getItem(key) || '[]');
+  const wrap = document.getElementById('donHistList');
+  if(!hist.length){ wrap.innerHTML = '<div class="small-muted">কোনো অনুদান দেখা যায়নি।</div>'; return; }
+  wrap.innerHTML = '';
+  hist.slice(0,10).forEach(h=>{
+    const row = document.createElement('div');
+    row.style.padding = '8px 0'; row.style.borderBottom = '1px dashed #eef6ee';
+    row.innerHTML = `<div style="font-weight:800">${h.candidate_name} <span style="font-weight:700;color:#0b6a33">+${h.amount} BDT</span></div><div class="small-muted">${new Date(h.ts).toLocaleString()}</div>`;
+    wrap.appendChild(row);
+  });
+}
+
+/* close modal on Esc */
+document.addEventListener('keydown', (e)=> {
+  if(e.key === 'Escape' && overlay.style.display === 'flex') closeDonate();
+});
+</script>
+<!-- ========== END DONATE BLOCK ========== -->
+
+
+    <!-- Election Selection -->
+    <div class="election-box">
+      <h2 class="election-title">Vote Option নির্বাচন করুন</h2>
+
+      <select id="electionSelect" class="election-dropdown" onchange="goElectionPage()">
+        <option value="" selected disabled>-- নির্বাচন নির্বাচন করুন --</option>
+        <option value="national">National Parliament Election</option>
+        <option value="city">City Corporation Election</option>
+        <option value="paurashava">Paurashava Election</option>
+        <option value="upazila">Upazila Election</option>
+        <option value="zila">Zila Parishad Election</option>
+        <option value="union">Union Parishad Election</option>
+      </select>
+    </div>
+
+  </div>
+
+  <footer class="footer">© Bangladesh Election Commission</footer>
+
+  <script>
+    function goElectionPage(){
+      let type = document.getElementById("electionSelect").value;
+
+      if(type === "national"){
+        window.location.href = "national_parliament_voting.html";
+      }
+      else if(type === "city"){
+        window.location.href = "city_corporation_voting.html";
+      }
+      else if(type === "paurashava"){
+        window.location.href = "paurashava_voting.html";
+      }
+      else if(type === "upazila"){
+        window.location.href = "upazila_voting.html";
+      }
+      else if(type === "zila"){
+        window.location.href = "zila_parishad_voting.html";
+      }
+      else if(type === "union"){
+        window.location.href = "union_parishad_voting.html";
+      }
+    }
+    
+    // auto render default donation election candidates on page load (so modal shows quickly)
+    document.addEventListener('DOMContentLoaded', function(){
+      renderCandidates(document.getElementById('donationElection').value);
+      loadDonationHistory();
+    });
+  </script>
+
+</body>
+</html>
