@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Zila Parishad Election — Vote</title>
+<style>
+:root{--green:#0b6a33}
+html,body{height:100%;margin:0;font-family:"Noto Sans Bengali","Noto Sans",Arial,sans-serif;color:#07301f}
+body{background:url("Bangladesh_EC.jpg") no-repeat center center fixed;background-size:cover}
+.page-overlay{min-height:100vh;background:linear-gradient(rgba(255,255,255,0.86),rgba(255,255,255,0.86));padding-bottom:48px}
+.topbar{max-width:1200px;margin:18px auto;background:rgba(255,255,255,0.95);border-radius:12px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 30px rgba(6,60,30,0.06);border:1px solid rgba(6,60,30,0.04)}
+.brand{font-weight:800;color:var(--green);font-size:18px}
+.topbar a{color:var(--green);text-decoration:none;font-weight:700}
+.wrap{max-width:1100px;margin:26px auto;padding:22px;background:rgba(255,255,255,0.92);border-radius:14px;box-shadow:0 22px 60px rgba(6,60,30,0.10);border:1px solid rgba(6,60,30,0.04)}
+.title{font-size:24px;color:var(--green);font-weight:800;margin:0 0 18px}
+.candidates{display:flex;gap:18px;flex-wrap:wrap}
+.card{position:relative;flex:1 1 48%;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:18px;border-radius:14px;cursor:pointer;transition:all .22s ease;background:rgba(255,255,255,0.36);border:1px solid rgba(255,255,255,0.45);box-shadow:0 12px 36px rgba(6,60,30,0.06);backdrop-filter:blur(8px)}
+.card:hover{transform:translateY(-6px);box-shadow:0 22px 50px rgba(6,60,30,0.10)}
+.card.selected{border-color:rgba(11,79,49,0.22);box-shadow:0 26px 70px rgba(11,79,49,0.16);background:rgba(255,255,255,0.66)}
+.left{display:flex;gap:14px;align-items:center;flex:1}
+.avatar{width:120px;height:120px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;font-weight:900;flex-shrink:0;box-shadow:inset 0 -8px 16px rgba(0,0,0,0.06)}
+.a1{background:linear-gradient(180deg,#2fa14f,#0b6a33)}
+.a2{background:linear-gradient(180deg,#f39b4a,#da291c)}
+.info{flex:1}
+.name{font-size:20px;font-weight:800;color:#0b4f33}
+.party{font-size:13px;margin-top:6px;color:#1f563c}
+.bio{font-size:13px;margin-top:10px;color:#476b5b;line-height:1.35}
+.tickMark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.1);width:90px;height:90px;border-radius:50%;background:linear-gradient(180deg,#2fa14f,#0b6a33);color:#fff;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:900;box-shadow:0 8px 25px rgba(0,0,0,0.25);opacity:0;transition:all .25s ease;pointer-events:none}
+.card.selected .tickMark{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.select-btn{background:linear-gradient(180deg,#2fa14f,#0b6a33);color:#fff;padding:12px 18px;border-radius:10px;font-weight:800;font-size:16px;border:none;cursor:pointer;min-width:170px;box-shadow:0 12px 34px rgba(11,79,49,0.16);white-space:nowrap}
+.vote-box{text-align:center;margin-top:26px}
+.vote-btn{background:var(--green);color:#fff;padding:14px 26px;border-radius:12px;font-size:18px;font-weight:800;border:none;cursor:pointer;box-shadow:0 14px 40px rgba(6,60,30,0.18)}
+#overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.46);z-index:9999}
+#overlay.show{display:flex}
+.modal{background:#fff;border-radius:12px;padding:22px;width:360px;text-align:center;box-shadow:0 20px 70px rgba(6,60,30,0.22)}
+.modal h2{margin:4px 0 8px;color:var(--green);font-size:20px}
+.modal p{color:#3e6050;margin:8px 0 0;font-size:14px}
+.modal .btns{display:flex;gap:12px;margin-top:18px}
+.modal button{flex:1;padding:10px 12px;border-radius:10px;border:none;font-weight:800;cursor:pointer}
+.no-btn{background:#e6e6e6;color:#222}
+.yes-btn{background:var(--green);color:#fff}
+@media(max-width:820px){.card{flex-direction:column;align-items:flex-start}.avatar{width:100%;height:120px;border-radius:10px;font-size:32px}.select-btn{min-width:100%}.candidates{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="page-overlay">
+  <header class="topbar"><div class="brand">বাংলাদেশ নির্বাচন কমিশন</div><div><a href="voter_page.html">← Back</a></div></header>
+  <main class="wrap">
+    <h1 class="title">Zila Parishad Election</h1>
+    <p style="margin:0 0 18px;color:#456b5a">জেলা পর্যায়ের প্রতিনিধির জন্য নিচের প্রার্থীদের নির্বাচন করুন।</p>
+
+    <div class="candidates" role="list" aria-label="Candidates">
+      <div class="card" id="cardA" data-value="Md. Abdul Karim" role="listitem" onclick="selectCard(event,'cardA')">
+        <div class="tickMark">✓</div>
+        <div class="left"><div class="avatar a1" aria-hidden="true">AK</div><div class="info"><div class="name">Md. Abdul Karim</div><div class="party">Independent</div><div class="bio">জেলা উন্নয়ন পরিকল্পনা ও জনস্বাস্থ্য নিয়ে কাজ করবেন।</div></div></div>
+        <button class="select-btn" onclick="selectAndFocus(event,'cardA')">আমি নির্বাচন করেছি</button>
+      </div>
+
+      <div class="card" id="cardB" data-value="Shahriar Alam" role="listitem" onclick="selectCard(event,'cardB')">
+        <div class="tickMark">✓</div>
+        <div class="left"><div class="avatar a2" aria-hidden="true">SA</div><div class="info"><div class="name">Shahriar Alam</div><div class="party">Democratic Alliance</div><div class="bio">শিক্ষা ও অবকাঠামো উন্নয়নে অগ্রাধিকার দেবেন।</div></div></div>
+        <button class="select-btn" onclick="selectAndFocus(event,'cardB')">আমি নির্বাচন করেছি</button>
+      </div>
+    </div>
+
+    <div class="vote-box"><button class="vote-btn" onclick="onVote('Zila Parishad Election')">ভোট দিন</button></div>
+  </main>
+</div>
+
+<div id="overlay"><div class="modal"><h2>আপনি কি নিশ্চিত?</h2><p>একবার ভোট দিলে পরিবর্তন করা যাবে না — আপনি কি নিশ্চিতভাবে ভোট দিতে চান?</p><div class="btns"><button class="no-btn" onclick="closeModal()">না</button><button id="confirmBtn" class="yes-btn">হ্যাঁ — নিশ্চিত</button></div></div></div>
+
+<script>
+let __selectedCandidate = null;
+function clearSelection(){ document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected')); __selectedCandidate = null; }
+function selectCard(ev,id){ if(ev.target.closest('.select-btn')) return; clearSelection(); const card=document.getElementById(id); if(card){ card.classList.add('selected'); __selectedCandidate = card.dataset.value; } }
+function selectAndFocus(ev,id){ ev.stopPropagation(); clearSelection(); const card=document.getElementById(id); if(card){ card.classList.add('selected'); __selectedCandidate = card.dataset.value; } ev.currentTarget.blur(); }
+function onVote(election){ if(!__selectedCandidate){ alert('প্রথমে একটি প্রার্থী নির্বাচন করুন।'); return; } const overlay=document.getElementById('overlay'); overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false'); document.getElementById('confirmBtn').onclick=function(){ const params=new URLSearchParams({election:election,candidate:__selectedCandidate}); window.location.href='vote_confirmation.html?'+params.toString(); }; }
+function closeModal(){ const overlay=document.getElementById('overlay'); overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); }
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>
