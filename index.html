@@ -96,7 +96,8 @@
       <div class="topbar-right">
         <div class="helpline">Helpline: <strong>+880-1316-448433</strong></div>
         <div class="support">Support: <a href="mailto:support@bec.gov.bd" style="color:var(--green-600);font-weight:700;">support@bec.gov.bd</a></div>
-        <a href="#" class="helpline">Sign-Up</a>
+        <!-- Sign-Up now points to signup.html -->
+        <a href="signup.html" class="helpline" style="background:#fff;border:1px solid rgba(11,79,49,0.12);text-decoration:none;color:var(--green-600);font-weight:700;padding:6px 10px;border-radius:8px;">Sign-Up</a>
       </div>
     </div>
   </header>
@@ -104,7 +105,7 @@
   <main class="wrap" role="main">
     <section class="login-card" aria-labelledby="loginTitle">
       <h1 id="loginTitle" class="card-title">Login</h1>
-      <div class="card-sub">Do not have an account? <a href="#" style="color:var(--green-600);font-weight:800">Sign-Up</a></div>
+      <div class="card-sub">Do not have an account? <a href="signup.html" style="color:var(--green-600);font-weight:800">Sign-Up</a></div>
 
       <div id="error" class="error" role="alert"></div>
 
@@ -142,7 +143,7 @@
 
         <!-- OTP area (hidden initially) -->
         <div id="otpArea" class="otp-area" style="display:none">
-          <div class="muted" id="otpInfo">OTP পাঠানো হয়েছে <span id="maskedPhone"></span>. কোডটি ৬ অঙ্কের — ৬০ সেকেন্ডের মধ্যে বসাও।</div>
+          <div class="muted" id="otpInfo">OTP পাঠানো হয়েছে <span id="maskedPhone"></span>. কোডটি ৬ অঙ্কের — ৬০ সেকেন্ডের মধ্যে বসাও।</div>
 
           <div class="otp-input" style="margin-top:8px">
             <input id="otpInput" placeholder="Enter OTP" aria-label="otp input" />
@@ -166,7 +167,7 @@
     <div class="modal" role="document" aria-labelledby="modalTitle" aria-describedby="modalDesc">
       <div class="tick">✓</div>
       <h2 id="modalTitle">Verified</h2>
-      <p id="modalDesc">আপনার OTP সফলভাবে যাচাই হয়েছে। আপনি এখন ড্যাশবোর্ডে যেতে পারবেন।</p>
+      <p id="modalDesc">আপনার OTP সফলভাবে যাচাই হয়েছে। আপনি এখন ড্যাশবোর্ডে যেতে পারবেন।</p>
       <div style="margin-top:14px">
         <button onclick="closeModal()" style="padding:10px 18px;border-radius:8px;border:none;background:var(--green-600);color:#fff;font-weight:700;cursor:pointer">Continue</button>
       </div>
@@ -335,7 +336,7 @@
       const entered = document.getElementById('otpInput').value.trim();
       const err = document.getElementById('error');
       err.style.display='none';
-      if(!simulatedOTP){ err.style.display='block'; err.textContent='OTP মেয়াদ শেষ বা পাঠানো হয়নি।'; return; }
+      if(!simulatedOTP){ err.style.display='block'; err.textContent='OTP মেয়াদ শেষ বা পাঠানো হয়নি।'; return; }
       if(entered.length === 0){ err.style.display='block'; err.textContent='OTP লিখুন।'; return; }
 
       // Accept if matches simulated OTP OR user typed the test OTP "123456"
@@ -356,6 +357,32 @@
     (function init(){
       regenCaptcha();
     })();
+  </script>
+
+  <!-- Auto-fill script: fills phone input if user just registered via signup.html -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      try {
+        const last = localStorage.getItem('last_registered_mobile');
+        if(last){
+          const phoneEl = document.getElementById('phone');
+          if(phoneEl && !phoneEl.value){
+            let v = last;
+            // last is stored without +88 in signup flow; try to present with +88 prefix in login input
+            if(!v.startsWith('+88')){
+              if(v.length === 11 && v.startsWith('01')) v = '+88' + v;
+              else if(v.length === 10 && v.startsWith('1')) v = '+88' + v;
+              else if(v.length === 10 && v.startsWith('0')) v = '+88' + v;
+            }
+            phoneEl.value = v;
+            // clear the stored helper to avoid autofill next time (optional)
+            // localStorage.removeItem('last_registered_mobile');
+          }
+        }
+      } catch(e){
+        console.warn('Autofill error', e);
+      }
+    });
   </script>
 </body>
 </html>
