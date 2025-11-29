@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Live Vote — National Parliament</title>
+  <style>
+    :root{--green:#0b6a33}
+    body{margin:0;font-family:"Noto Sans Bengali","Noto Sans",Arial,sans-serif;background:#f6faf8;color:#07301f}
+    .wrap{max-width:1000px;margin:28px auto;padding:22px}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+    .brand{font-weight:900;color:var(--green);font-size:20px}
+    .clock{font-weight:800;color:#2f5b45}
+    .grid{display:flex;gap:18px;flex-wrap:wrap}
+    .card{flex:1 1 48%;background:linear-gradient(180deg,#fff,#f9fff9);padding:18px;border-radius:14px;box-shadow:0 18px 50px rgba(6,60,30,0.06);position:relative;min-height:220px}
+    .candidate-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .avatar{width:84px;height:84px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:24px}
+    .av1{background:linear-gradient(180deg,#2fa14f,#0b6a33)}
+    .av2{background:linear-gradient(180deg,#f39b4a,#da291c)}
+    .cname{font-weight:900;color:#0b4f33;font-size:20px}
+    .cparty{color:#476b5b;font-size:13px;margin-top:6px}
+    .votes{font-size:48px;font-weight:900;color:#145c3f;margin-top:18px;text-align:center}
+    .bar-wrap{margin-top:12px;background:#eef8ef;border-radius:10px;padding:6px}
+    .bar{height:14px;border-radius:8px;background:linear-gradient(90deg,#2fa14f,#0b6a33);width:40%}
+    .meta{display:flex;justify-content:space-between;margin-top:8px;color:#456b5a;font-weight:700}
+    .footer{margin-top:20px;text-align:center;color:#50645a}
+    @media(max-width:820px){ .card{flex:1 1 100%} .votes{font-size:36px} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">National Parliament — Live Vote</div>
+      <div class="clock" id="liveClock">--:--:--</div>
+    </div>
+
+    <div style="margin-bottom:10px;color:#345243">This demo shows live counts for two candidates. Numbers are simulated locally — replace with your API for real live data.</div>
+
+    <div class="grid">
+      <div class="card" id="card-nehal">
+        <div class="candidate-head">
+          <div class="avatar av1">MN</div>
+          <div>
+            <div class="cname" id="name-nehal">Md Nehal</div>
+            <div class="cparty" id="party-nehal">Independent</div>
+          </div>
+        </div>
+        <div class="votes" id="votesNehal">30,000</div>
+
+        <div class="bar-wrap" aria-hidden="true">
+          <div class="bar" id="bar-nehal" style="width:49%"></div>
+        </div>
+
+        <div class="meta">
+          <div id="share-nehal">Share: 49%</div>
+          <div id="raw-nehal">Votes: 30,000</div>
+        </div>
+      </div>
+
+      <div class="card" id="card-reaz">
+        <div class="candidate-head">
+          <div class="avatar av2">MR</div>
+          <div>
+            <div class="cname" id="name-reaz">Md Reaz</div>
+            <div class="cparty" id="party-reaz">Party X</div>
+          </div>
+        </div>
+        <div class="votes" id="votesReaz">32,000</div>
+
+        <div class="bar-wrap" aria-hidden="true">
+          <div class="bar" id="bar-reaz" style="width:51%"></div>
+        </div>
+
+        <div class="meta">
+          <div id="share-reaz">Share: 51%</div>
+          <div id="raw-reaz">Votes: 32,000</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">Last updated: <span id="lastUpdated">—</span></div>
+  </div>
+
+  <script>
+    // demo data (start values you asked)
+    let data = {
+      nehal: 30000,
+      reaz: 32000
+    };
+
+    // format number
+    function fmt(n){ return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+
+    // compute shares
+    function updateView(){
+      const total = data.nehal + data.reaz;
+      const shareNehal = total ? Math.round((data.nehal/total)*100) : 0;
+      const shareReaz  = total ? (100 - shareNehal) : 0;
+
+      document.getElementById('votesNehal').textContent = fmt(data.nehal);
+      document.getElementById('votesReaz').textContent = fmt(data.reaz);
+
+      document.getElementById('raw-nehal').textContent = 'Votes: ' + fmt(data.nehal);
+      document.getElementById('raw-reaz').textContent = 'Votes: ' + fmt(data.reaz);
+
+      document.getElementById('share-nehal').textContent = 'Share: ' + shareNehal + '%';
+      document.getElementById('share-reaz').textContent = 'Share: ' + shareReaz + '%';
+
+      // bar width by share (min 2% for visibility)
+      document.getElementById('bar-nehal').style.width = Math.max(2, shareNehal) + '%';
+      document.getElementById('bar-reaz').style.width  = Math.max(2, shareReaz) + '%';
+
+      document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+    }
+
+    // clock
+    function tickClock(){
+      const d = new Date();
+      const hh = String(d.getHours()).padStart(2,'0');
+      const mm = String(d.getMinutes()).padStart(2,'0');
+      const ss = String(d.getSeconds()).padStart(2,'0');
+      document.getElementById('liveClock').textContent = hh + ':' + mm + ':' + ss;
+    }
+
+    // simulate live changes (demo): every 4s small random increments
+    function simulate(){
+      const addA = Math.random() < 0.7 ? Math.floor(Math.random()*4) : Math.floor(Math.random()*10);
+      const addB = Math.random() < 0.7 ? Math.floor(Math.random()*3) : Math.floor(Math.random()*8);
+      data.nehal += addA;
+      data.reaz  += addB;
+      updateView();
+    }
+
+    // init
+    updateView();
+    tickClock();
+    setInterval(tickClock, 1000);
+    setInterval(simulate, 4000);
+
+    // if you have a real API, replace simulate() with fetch('/api/live-counts').then(...) etc.
+  </script>
+</body>
+</html>
